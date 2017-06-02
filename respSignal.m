@@ -25,7 +25,7 @@ ct=zeros([px_x,px_y,n_angles_step]);
 data_table = zeros([3,nof]);
 data_table(1,:) = 0:nof-1;
 
-for file=1:nof
+for file=1:200
         %fprintf('Processing file %i of %i\n',file,nof)
         % Indexes of acquisition  & calib file update
         step = fix(file/n_angles_step)+1;
@@ -74,23 +74,22 @@ id_v = data_table(1,:);
         %% Opening a projection and getting the ROI
         fname = [acqPath num2str(file-1) '.ct'];
         [ct(:,:,frame),refT] =readSimpleBin(fname,px_x,px_y,nop_f,fmt);
-        intenVol(:,:,file)=ct(intenROI(1,2):intenROI(4,2),intenROI(1,1):intenROI(2,1),frame); 
-        
-        % make an array of un mean_matched intensities
-           meanstwo(file) = mean(mean(intenVol(:,:,file)));
-        
-        % Mean match every file
-           intenVol(:,:,file)= mean_match(intenVol(:,:,file), 0);
-           
-        % Find an array of mean intensities
-           means(file) =  mean(mean(intenVol(:,:,file)));
+         % Mean match every file
+        ct(:,:,frame)= mean_match(ct(:,:,frame),  65535/2);
+        intenVol(:,:,file)=ct(intenROI(1,2):intenROI(4,2),intenROI(1,1):intenROI(2,1),frame);
+        means(file) = mean(mean(intenVol(:,:,file)));
+     
     end%for NOF   
-    % plot the array
-    figure;
-    scatter(id_v, means);
+
     
-    figure;
-    scatter(id_v, meanstwo);
+     % Find an array of mean intensities
     
+    means_sm = smooth(means,'rlowess')';
+    means = means-means_sm;
+    
+    %Plot the array
+    figure;
+    plot(id_v, means);
+        
 
 end %function
