@@ -78,18 +78,51 @@ id_v = data_table(1,:);
         ct(:,:,frame)= mean_match(ct(:,:,frame),  65535/2);
         intenVol(:,:,file)=ct(intenROI(1,2):intenROI(4,2),intenROI(1,1):intenROI(2,1),frame);
         means(file) = mean(mean(intenVol(:,:,file)));
+        
      
     end%for NOF   
 
     
      % Find an array of mean intensities
-    
+    figure;
+    plot(id_v, means);
     means_sm = smooth(means,'rlowess')';
     means = means-means_sm;
-    
+    figure;
+    plot(id_v, means_sm);
     %Plot the array
     figure;
     plot(id_v, means);
+    
+    
+    %Find breathing rate of mouse
+    breath = zeros(1,nof);
+    var = zeros(1:nof);
+    for num = 1:nof
+        %find number of frames per breath
+        if num > 1
+            if means(num) > 100
+                count = 1;
+                if means(1,num+1)< means(num) > means(num-1) 
+                    breath(num)= count;
+                    count = 1; 
+                end
+            end
+        end
+        count = count +1;
+        
+        %add time for changing angle
+        if breath(num) > 0
+           if num > 8
+              var(num) = breath(num) - mod(num,8); %used to find the number of times the angle has changed
+              var(num)= quorent(var,8);
+           end
+        end
+        breath(num) = (breath(num)*0.05) + var(num);
+        
+        %find average breathing rate
+        
+    end % for breathing
         
 
 end %function
