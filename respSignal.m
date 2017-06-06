@@ -77,6 +77,9 @@ id_v = data_table(1,:);
          % Mean match every file
         ct(:,:,frame)= mean_match(ct(:,:,frame),  65535/2);
         intenVol(:,:,file)=ct(intenROI(1,2):intenROI(4,2),intenROI(1,1):intenROI(2,1),frame);
+        %fd = fopen([path_dest  num2str(file-1) '.ct'], 'w+');
+        %fwrite(fd, ct(:,:,frame), fmt);
+        %fclose(fd);
         means(file) = mean(mean(intenVol(:,:,file)));
         
      
@@ -84,12 +87,8 @@ id_v = data_table(1,:);
 
     
      % Find an array of mean intensities
-    figure;
-    plot(id_v, means);
     means_sm = smooth(means,'rlowess')';
     means = means-means_sm;
-    figure;
-    plot(id_v, means_sm);
     %Plot the array
     figure;
     plot(id_v, means);
@@ -97,32 +96,52 @@ id_v = data_table(1,:);
     
     %Find breathing rate of mouse
     breath = zeros(1,nof);
-    var = zeros(1:nof);
-    for num = 1:nof
-        %find number of frames per breath
-        if num > 1
-            if means(num) > 100
-                count = 1;
-                if means(1,num+1)< means(num) > means(num-1) 
-                    breath(num)= count;
-                    count = 1; 
+    var = zeros(1,nof);
+    count = 0;
+    %find number of frames per breath
+    for n = 1:nof
+            if means(n) > 170
+                %for normal peaks
+                if n>1 && n < nof
+                    if means(n+1)< means(n)&& means(n) > means(n-1) && means(n+1) > -50
+                       breath(n)= count;
+                       count = 0;
+                    end
+                end
+                
+                %for peak at n = 1
+                if n==1 && means(n+1)< means(n) && means(n+1) > 0
+                   breath(n) = 0;
+                end
+                
+                %for peak at n=nof
+                if n==nof && means(n) > means(n-1) && means(n+1) > 0
+                   breath(n) = count;
                 end
             end
-        end
         count = count +1;
-        
-        %add time for changing angle
+    end %for frames of breath
+    
+    %add time for changing angle
+    counts = 0;
+    avg = 0;
+    for num = 1:nof     
         if breath(num) > 0
-           if num > 8
+           if num > 7
               var(num) = breath(num) - mod(num,8); %used to find the number of times the angle has changed
-              var(num)= quorent(var,8);
+              var(num)= fix(var(num)/8);
            end
+           counts = counts +1;
         end
         breath(num) = (breath(num)*0.05) + var(num);
-        
-        %find average breathing rate
-        
-    end % for breathing
+        avg = avg + breath(num);
+    end %for rate
+    
+    %find average breathing rate
+    avg = avg/counts;
+    avg = 60/avg;
+    fprintf('The average breathing rate is %.2f breaths per minute. Number of breaths taken is %d. \n',avg, counts) 
+    
         
 
 end %function

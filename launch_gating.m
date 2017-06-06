@@ -10,7 +10,7 @@ addpath(genpath(path));
 
 %% *********************** ACQ Parameters *********************************
 % Data paths and files
-acqPath = 'D:\nmurty\data\9\1445270389791\';
+acqPath = 'D:\nmurty\data\9\1445270389791\'; %KEEP THE "\"
 binning= 4; %Binning of acquisition
 nos = 514; %number of steps
 n_angles_step = 8; %number of projections per step
@@ -24,6 +24,7 @@ width =  3072/binning; % 768
 height = 1944/binning; % 486
 % With '\' at the end
 procPath = [acqPath 'preproc\'];
-outputPath = respSignal(procPath,width,height,nos,n_angles_step,fmt);
+%outputPath = respSignal(procPath,width,height,nos,n_angles_step,fmt);
+outputPath = cardSignal(procPath,width,height,nos,n_angles_step,fmt);
 
 
