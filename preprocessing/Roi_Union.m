@@ -8,8 +8,13 @@ img = zeros ([px_x,px_y,1]);
 
 for i = 1:4
     index = (i-1)*nof/4;
-    fname = [acqPath num2str(index) '.ct']
-    [img_aux,refT] =readSimpleBin(fname,px_x,px_y,1,fmt);
+    fname = [acqPath num2str(index) '.ct'];
+    while exist (fname) == 0
+        index = index +1;
+        fname = [acqPath num2str(index) '.ct'];
+    end
+   
+        [img_aux,refT] =readSimpleBin(fname,px_x,px_y,1,fmt);
     
     keepon=1;
     % Roi selection per opened image

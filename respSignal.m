@@ -1,4 +1,4 @@
-function [ path_dest ] = respSignal(acqPath,width,height,nos,nop_s,fmt)
+function [data_table , path_dest] = respSignal(acqPath,width,height,nos,nop_s,fmt)
 % Respiratory signal extracted from the intensities variations from
 % a Region of Interest
 % A preproccesing of the projections is performed to match the mean
@@ -25,7 +25,7 @@ ct=zeros([px_x,px_y,n_angles_step]);
 data_table = zeros([3,nof]);
 data_table(1,:) = 0:nof-1;
 
-for file=1:200
+for file=1:nof
         %fprintf('Processing file %i of %i\n',file,nof)
         % Indexes of acquisition  & calib file update
         step = fix(file/n_angles_step)+1;
@@ -57,8 +57,8 @@ id_v = data_table(1,:);
     % Allocating for user region input
     intenVol=zeros([abs(intenROI(1,2)-intenROI(4,2))+1,abs(intenROI(1,1)-intenROI(2,1))+1,nof]);
     means= zeros(1,nof);
-    meanstwo = zeros(1,nof);
-    profile on;
+    %meanstwo = zeros(1,nof);
+    %profile on;
 
  %% Process
     %disp('Signal loop: ');
@@ -106,19 +106,27 @@ id_v = data_table(1,:);
                     if means(n+1)< means(n)&& means(n) > means(n-1) && means(n+1) > -50
                        breath(n)= count;
                        count = 0;
+                        data_table(3,n) = 2;
                     end
                 end
                 
                 %for peak at n = 1
                 if n==1 && means(n+1)< means(n) && means(n+1) > 0
                    breath(n) = 0;
+                    data_table(3,n) = 2;
                 end
                 
                 %for peak at n=nof
-                if n==nof && means(n) > means(n-1) && means(n+1) > 0
+                if n==nof && means(n) > means(n-1)
                    breath(n) = count;
+                    data_table(3,n) = 2;
                 end
+               
+            elseif abs(means(n)) < 80
+               data_table(3,n) = 1 ;
+               copyfile ([acqPath num2str(n-1) '.ct'],path_dest);
             end
+        
         count = count +1;
     end %for frames of breath
     
@@ -141,7 +149,7 @@ id_v = data_table(1,:);
     avg = avg/counts;
     avg = 60/avg;
     fprintf('The average breathing rate is %.2f breaths per minute. Number of breaths taken is %d. \n',avg, counts) 
-    
+    save([acqPath 'p1\data_table.mat'],'data_table')
         
 
 end %function

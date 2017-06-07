@@ -1,4 +1,4 @@
-function [ path_dest ] = respSignal(acqPath,width,height,nos,nop_s,fmt)
+function [ path_dest ] = cardSignal(acqPath,width,height,nos,nop_s,fmt, data_table)
 % Respiratory signal extracted from the intensities variations from
 % a Region of Interest
 % A preproccesing of the projections is performed to match the mean
@@ -25,7 +25,7 @@ ct=zeros([px_x,px_y,n_angles_step]);
 data_table = zeros([3,nof]);
 data_table(1,:) = 0:nof-1;
 
-for file=1:200
+for file=1:nof
         %fprintf('Processing file %i of %i\n',file,nof)
         % Indexes of acquisition  & calib file update
         step = fix(file/n_angles_step)+1;
@@ -41,12 +41,12 @@ id_v = data_table(1,:);
 %% Environment configuration
 % Creating directories for result
 %if ctfFlag
-    new_dir ='p1';
+    new_dir ='c1';
     mkdir(acqPath,new_dir);
-    aux_path  = [acqPath 'p1'];
+    aux_path  = [acqPath 'c1'];
     new_dir ='subvolume00';
     mkdir(aux_path,new_dir);
-    path_dest = [acqPath 'p1\subvolume00\'];
+    path_dest = [acqPath 'c1\subvolume00\'];
     % Loading geometric info
     %[proyAngle, offsetX, offsetY, etaCalc,  DSO, DDO, thetaCalc] = loadCalib([acqPath 'detailedCalibrationCTF.txt'],nof);
     
@@ -58,11 +58,12 @@ id_v = data_table(1,:);
     intenVol=zeros([abs(intenROI(1,2)-intenROI(4,2))+1,abs(intenROI(1,1)-intenROI(2,1))+1,nof]);
     means= zeros(1,nof);
     meanstwo = zeros(1,nof);
-    profile on;
+    %profile on;
 
  %% Process
     %disp('Signal loop: ');
-    for file=1:nof
+    for file= 1:nof %%loop with the indexes of data_table "resting_state"
+        if data_table(3, file) == 1
         fprintf('Processing file %i of %i\n',file,nof)
         % Indexes of acquisition  & calib file update
         step = fix(file/n_angles_step)+1;
@@ -72,6 +73,7 @@ id_v = data_table(1,:);
             step = step -1;
         end %if first frame of step
         %% Opening a projection and getting the ROI
+     
         fname = [acqPath num2str(file-1) '.ct'];
         [ct(:,:,frame),refT] =readSimpleBin(fname,px_x,px_y,nop_f,fmt);
          % Mean match every file
@@ -81,7 +83,7 @@ id_v = data_table(1,:);
         %fwrite(fd, ct(:,:,frame), fmt);
         %fclose(fd);
         means(file) = mean(mean(intenVol(:,:,file)));
-        
+        end
      
     end%for NOF   
 
@@ -95,52 +97,55 @@ id_v = data_table(1,:);
     
     
     %Find heart rate of mouse
-    breath = zeros(1,nof);
+    beat = zeros(1,nof);
     var = zeros(1,nof);
     count = 0;
     %find number of frames per beats
-    for n = 1:nof
-            if means(n) > 170
+    for n = 1:nof 
+            if means(n) > 0 && means(n) < 20
                 %for normal peaks
                 if n>1 && n < nof
                     if means(n+1)< means(n)&& means(n) > means(n-1) && means(n+1) > -50
-                       breath(n)= count;
+                       beat(n)= count;
                        count = 0;
                     end
                 end
                 
                 %for peak at n = 1
                 if n==1 && means(n+1)< means(n) && means(n+1) > 0
-                   breath(n) = 0;
+                   beat(n) = 0;
                 end
                 
                 %for peak at n=nof
-                if n==nof && means(n) > means(n-1) && means(n+1) > 0
-                   breath(n) = count;
+                if n==nof && means(n) > means(n-1)
+                   beat(n) = count;
                 end
+            elseif means(n) >= 20 || means(n) < -20
+                count = count +0;
+            else
+                count = count +1;
             end
-        count = count +1;
-    end %for frames of breath
+    end %for frames of beat
     
     %add time for changing angle
     counts = 0;
     avg = 0;
     for num = 1:nof     
-        if breath(num) > 0
+        if beat(num) > 0
            if num > 7
-              var(num) = breath(num) - mod(num,8); %used to find the number of times the angle has changed
+              var(num) = beat(num) - mod(num,8); %used to find the number of times the angle has changed
               var(num)= fix(var(num)/8);
            end
            counts = counts +1;
         end
-        breath(num) = (breath(num)*0.05) + var(num);
-        avg = avg + breath(num);
+        beat(num) = (beat(num)*0.05) + var(num);
+        avg = avg + beat(num);
     end %for rate
     
     %find average heart rate
     avg = avg/counts;
-    avg = 360/avg;
-    fprintf('The average heart rate is %.2f beats per second. Number of beats is %f',avg, counts) 
+    avg = 60/avg;
+    fprintf('The average heart rate is %.2f beats per minute. Number of beats is %f',avg, counts) 
     
         
 
