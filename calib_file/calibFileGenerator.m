@@ -1,6 +1,6 @@
 function [ res ] = calibFileGenerator(outputPath, angles, binning)
    
- masterCalibrationPath='C:\Users\biig\Google Drive\Hardcore\respiratory_gating\CChav_gating\detailedCalibration_high_b1_JUN16.txt';
+ masterCalibrationPath='detailedCalibration_high_b1_JUN16.txt';
     nProy=720;
 
 % updateLog(['[calibFileGenerator] Master calibration file: ' masterCalibrationPath]);

@@ -125,6 +125,7 @@ id_v = data_table(1,:);
             elseif abs(means(n)) < 80
                data_table(3,n) = 1 ;
                copyfile ([acqPath num2str(n-1) '.ct'],path_dest);
+               fprintf('Saving heartbeat file %i\n',n)
             end
         
         count = count +1;

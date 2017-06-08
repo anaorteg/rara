@@ -25,8 +25,8 @@ height = 1944/binning; % 486
 % With '\' at the end
 procPath = [acqPath 'preproc\'];
 %[data_table, path_dest] = respSignal(procPath,width,height,nos,n_angles_step,fmt);
-%  path_dest = [acqPath 'p1\subvolume00\'];
-%  load(data_table)
+  path_dest = [acqPath 'p1\subvolume00\'];
+  load([acqPath 'p1\data_table.mat'])
 outputPath = cardSignal(path_dest,width,height,nos,n_angles_step,fmt,data_table);
 %outputPath = cardSignal(path_dest,width,height,nos,n_angles_step,fmt,data_table);
 

@@ -24,10 +24,10 @@ width =  3072/binning; % 768
 height = 1944/binning; % 486
 % With '\' at the end
 procPath = [acqPath 'preproc\'];
-[data_table, path_dest] = respSignal(procPath,width,height,nos,n_angles_step,fmt);
-%  path_dest = [acqPath 'p1\subvolume00\'];
-%  load(data_table)
-outputPath = cardSignal(path_dest,width,height,nos,n_angles_step,fmt,data_table);
+%[data_table, path_dest] = respSignal(procPath,width,height,nos,n_angles_step,fmt);
+  path_dest = [procPath 'p1\subvolume00\'];
+  load([procPath 'p1\data_table.mat'], 'data_table')
+outputPath = cardSignal(path_dest,width,height,nos,n_angles_step,fmt,data_table, procPath);
 %outputPath = cardSignal(path_dest,width,height,nos,n_angles_step,fmt,data_table);
-
+avgStep(data_table, binning, nos, n_angles_step, width, height, procPath, path_dest, fmt);
 
