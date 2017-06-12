@@ -1,4 +1,4 @@
-function [ path_dest ] = cardSignal(acqPath,width,height,nos,nop_s,fmt, d_table, savePath)
+function [ data_table, path_dest ] = cardSignal(acqPath,width,height,nos,nop_s,fmt, d_table, savePath)
 % Respiratory signal extracted from the intensities variations from
 % a Region of Interest
 % A preproccesing of the projections is performed to match the mean
@@ -104,7 +104,7 @@ id_v = data_table(1,:);
     count = 0;
     %find number of frames per beats
     for n = 1:nof 
-        if d_table(3, file) == 1
+        if d_table(3, n) == 1
             if means(n) > 2 && means(n) < 15
                 %for normal peaks
                 if n>1 && n < nof
@@ -113,24 +113,34 @@ id_v = data_table(1,:);
                        count = 0;
                        copyfile ([savePath num2str(n-1) '.ct'],path_dest);
                        fprintf('Saving frozen file %i\n',n)
+                       data_table(3,n) = 1;
                     end
                 end
                 
                 %for peak at n = 1
-                if n==1 && means(n+1)< means(n) && means(n+1) > 0
+                if n==1 && means(n+1)< means(n)
                    beat(n) = 0;
+                   data_table(3,n) = 1;
+                   copyfile ([savePath num2str(n-1) '.ct'],path_dest);
+                   fprintf('Saving frozen file %i\n',n)
                 end
                 
                 %for peak at n=nof
                 if n==nof && means(n) > means(n-1)
                    beat(n) = count;
+                   data_table(3,n) = 1;
+                   copyfile ([savePath num2str(n-1) '.ct'],path_dest);
+                   fprintf('Saving frozen file %i\n',n)                   
                 end
             elseif means(n) >= 20 || means(n) < -20 || means(n)== 0
                 count = count +0;
+                data_table(3,n) = 0;
             else
                 count = count +1;
+                data_table(3,n) = 0;
             end
         end %if for d_table
+        
     end %for frames of beat
     
     %add time for changing angle
@@ -151,7 +161,8 @@ id_v = data_table(1,:);
     %find average heart rate
     avg = avg/counts;
     avg = 60/avg;
-    fprintf('The average heart rate is %.2f beats per minute. Number of beats is %f',avg, counts) 
+    fprintf('The average heart rate is %.2f beats per minute. Number of beats is %f \n',avg, counts) 
+    save([savePath 'c1\data_table.mat'],'data_table')
     
         
 

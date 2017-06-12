@@ -4,8 +4,7 @@ function [ output_args ] = avgStep( data_table , binning, nos, nop, width, heigh
 %   projections belonging to the same step.
 nof = nos*nop; %total number of files
 angles = zeros(1,(nof/8));
-%respBlock= zeros(width, height, nop);
-ct=zeros([width,height,nop]);
+
 
 %create new directory
     new_dir ='Calib';
@@ -20,28 +19,34 @@ ct=zeros([width,height,nop]);
 
 for i = 1:(nof/8)
 % Average frames
+respBlock= zeros(width, height);
     for n= 1:8
         if data_table(3,8*(i-1)+n)==1
-            fname = [readPath num2str(8*(i-1)+n) '.ct'];
+            fname = [readPath num2str(8*(i-1)+n-1) '.ct'];
             fprintf('Processing file %i \n',8*(i-1)+n)
             [respFile,refT] =readSimpleBin(fname,width,height,1,fmt);
-            if n==1 
-                respBlock = respFile;
-            else    
-                respBlock = cat(3, respBlock, respFile);
-            end
+             respBlock = cat(3, respBlock, respFile);
         end
+          
+
     end
     %average and save file into directory 
-    means = mean(respBlock, 3);
-     fd = fopen([path_dest  num2str(file-1) '.ct'], 'w+');
+fprintf('wait')
+    means = mean(respBlock(:,:,2:end), 3);
+     fd = fopen([path_dest  num2str(i-1) '.ct'], 'w+');
         fwrite(fd, means, fmt);
         fclose(fd);
-    angles(i*8) = data_table(2,i)*0.7; %angular positions in degrees instead of steps
+
+
+        
+    %find angle    
+    angles(i) = data_table(2,i*8)*0.7; %angular positions in degrees instead of steps
 end % for averaging and angles
 
 % Generate the calibration file 
-calibFileGenerator(outputPath, angles, binning)
+calibFileGenerator(path_dest, angles, binning);
+
+print('Finished Calibrating')
 
 end %function
 

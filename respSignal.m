@@ -149,7 +149,7 @@ id_v = data_table(1,:);
     %find average breathing rate
     avg = avg/counts;
     avg = 60/avg;
-    fprintf('The average breathing rate is %.2f breaths per minute. Number of breaths taken is %d. \n',avg, counts) 
+    fprintf('The average breathing rate is %.2f breaths per minute. Number of breaths taken is %d.\n',avg, counts) 
     save([acqPath 'p1\data_table.mat'],'data_table')
         
 
