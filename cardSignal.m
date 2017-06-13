@@ -1,4 +1,4 @@
-function [ data_table, path_dest ] = cardSignal(acqPath,width,height,nos,nop_s,fmt, d_table, savePath)
+function [ data_table, path_dest, avg ] = cardSignal(acqPath,width,height,nos,nop_s,fmt, d_table, savePath)
 % Respiratory signal extracted from the intensities variations from
 % a Region of Interest
 % A preproccesing of the projections is performed to match the mean

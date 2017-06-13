@@ -1,4 +1,4 @@
-function [data_table , path_dest] = respSignal(acqPath,width,height,nos,nop_s,fmt)
+function [data_table , path_dest,avg] = respSignal(acqPath,width,height,nos,nop_s,fmt)
 % Respiratory signal extracted from the intensities variations from
 % a Region of Interest
 % A preproccesing of the projections is performed to match the mean
@@ -71,18 +71,24 @@ id_v = data_table(1,:);
             frame = n_angles_step;
             step = step -1;
         end %if first frame of step
+        
         %% Opening a projection and getting the ROI
         fname = [acqPath num2str(file-1) '.ct'];
         [ct(:,:,frame),refT] =readSimpleBin(fname,px_x,px_y,nop_f,fmt);
+        
          % Mean match every file
         ct(:,:,frame)= mean_match(ct(:,:,frame),  65535/2);
         intenVol(:,:,file)=ct(intenROI(1,2):intenROI(4,2),intenROI(1,1):intenROI(2,1),frame);
+        
+%         intenVol = maskIm( intenROI, intenVol,file,frame,px_x,px_y,nop_f,fmt,ct, acqPath );
+        
         %fd = fopen([path_dest  num2str(file-1) '.ct'], 'w+');
         %fwrite(fd, ct(:,:,frame), fmt);
         %fclose(fd);
+        
+        %take a mean of the images
         means(file) = mean(mean(intenVol(:,:,file)));
         
-     
     end%for NOF   
 
     

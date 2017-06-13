@@ -15,8 +15,6 @@ angles = zeros(1,(nof/8));
     path_dest = [acqPath 'Calib\subvolume00\'];
 
 
-
-
 for i = 1:(nof/8)
 % Average frames
 respBlock= zeros(width, height);
@@ -25,26 +23,26 @@ respBlock= zeros(width, height);
             fname = [readPath num2str(8*(i-1)+n-1) '.ct'];
             fprintf('Processing file %i \n',8*(i-1)+n)
             [respFile,refT] =readSimpleBin(fname,width,height,1,fmt);
-             respBlock = cat(3, respBlock, respFile);
+            respBlock = cat(3, respBlock, respFile);
         end
           
 
     end
     %average and save file into directory 
     if size(respBlock,3) > 1
-    means = mean(respBlock(:,:,2:end), 3);
+     means = mean(respBlock(:,:,2:end), 3);
      fd = fopen([path_dest  num2str(i-1) '.ct'], 'w+');
-        fwrite(fd, means, fmt);
-        fclose(fd);
-    end
-
-
+     fwrite(fd, means, fmt);
+     fclose(fd);
         
     %find angle    
     angles(i) = data_table(2,i*8)*0.7; %angular positions in degrees instead of steps
+    end
+
 end % for averaging and angles
 
 % Generate the calibration file 
+angles(angles==0) = []; 
 calibFileGenerator(path_dest, angles, binning);
 
 end %function
