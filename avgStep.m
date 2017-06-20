@@ -13,6 +13,8 @@ angles = zeros(1,(nof/8));
     new_dir ='subvolume00';
     mkdir(aux_path,new_dir);
     path_dest = [acqPath 'Calib\subvolume00\'];
+    
+    count = 0;
 
 
 for i = 1:(nof/8)
@@ -24,6 +26,7 @@ respBlock= zeros(width, height);
             fprintf('Processing file %i \n',8*(i-1)+n)
             [respFile,refT] =readSimpleBin(fname,width,height,1,fmt);
             respBlock = cat(3, respBlock, respFile);
+          
         end
           
 
@@ -31,14 +34,14 @@ respBlock= zeros(width, height);
     %average and save file into directory 
     if size(respBlock,3) > 1
      means = mean(respBlock(:,:,2:end), 3);
-     fd = fopen([path_dest  num2str(i-1) '.ct'], 'w+');
+     fd = fopen([path_dest  num2str(count) '.ct'], 'w+');
      fwrite(fd, means, fmt);
      fclose(fd);
-        
+     count = count+1;
     %find angle    
     angles(i) = data_table(2,i*8)*0.7; %angular positions in degrees instead of steps
     end
-
+    
 end % for averaging and angles
 
 % Generate the calibration file 

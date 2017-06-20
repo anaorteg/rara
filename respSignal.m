@@ -52,6 +52,7 @@ id_v = data_table(1,:);
     
     % Ask the user to select a ROI based on the 4 cardinal points of the
     % acquisition
+    fprintf('Pick the region of interest to get the breathing rate \n')
     intenROI = Roi_Union(acqPath,px_x,px_y,fmt,nof);
     %tic;
     % Allocating for user region input
@@ -95,6 +96,7 @@ id_v = data_table(1,:);
      % Find an array of mean intensities
     means_sm = smooth(means,'rlowess')';
     means = means-means_sm;
+    
     %Plot the array
     figure;
     plot(id_v, means);
@@ -155,7 +157,7 @@ id_v = data_table(1,:);
     %find average breathing rate
     avg = avg/counts;
     avg = 60/avg;
-    fprintf('The average breathing rate is %.2f breaths per minute. Number of breaths taken is %d.\n',avg, counts) 
+%     fprintf('The average breathing rate is %.2f breaths per minute. Number of breaths taken is %d.\n',avg, counts) 
     save([acqPath 'p1\data_table.mat'],'data_table')
         
 

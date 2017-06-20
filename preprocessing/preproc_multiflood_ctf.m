@@ -31,7 +31,7 @@ for file=1:nof
     
     %disp(fname)
 
-    fname=[acqPath 'raw\'  num2str(file-1) '.ct'] ;
+    fname=[acqPath 'subvolume00\'  num2str(file-1) '.ct'] ;
     [img,~] =readSimpleBin(fname,px_x,px_y,1,'uint16',0);
     %disp(fname)
     outFolderFile=[acqPath 'preproc\' num2str(file-1) '.ct'];

@@ -29,9 +29,9 @@ function [ intenVol_masked ] = maskIm( intenROI, intenVol,file,frame,px_x,px_y,n
     intenVol_masked = intenVol(:,:,file);
     intenVol_masked (intenVol_masked == 0)= [];
     
-     fd = fopen([path_dest  num2str(file-1) '.ct'], 'w+');
-     fwrite(fd, intenVol(:,:,file), fmt);
-     fclose(fd);
+%      fd = fopen([path_dest  num2str(file-1) '.ct'], 'w+');
+%      fwrite(fd, intenVol(:,:,file), fmt);
+%      fclose(fd);
     
     
     

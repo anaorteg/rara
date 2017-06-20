@@ -52,6 +52,7 @@ id_v = data_table(1,:);
     
     % Ask the user to select a ROI based on the 4 cardinal points of the
     % acquisition
+    fprintf('Pick the region of interest to get the heart rate \n')
     intenROI = Roi_Union(acqPath,px_x,px_y,fmt,nof);
     %tic;
     % Allocating for user region input
@@ -161,7 +162,7 @@ id_v = data_table(1,:);
     %find average heart rate
     avg = avg/counts;
     avg = 60/avg;
-    fprintf('The average heart rate is %.2f beats per minute. Number of beats is %f \n',avg, counts) 
+%     fprintf('The average heart rate is %.2f beats per minute. Number of beats is %f \n',avg, counts) 
     save([savePath 'c1\data_table.mat'],'data_table')
     
         
