@@ -81,7 +81,7 @@ id_v = data_table(1,:);
         ct(:,:,frame)= mean_match(ct(:,:,frame),  65535/2);
         intenVol(:,:,file)=ct(intenROI(1,2):intenROI(4,2),intenROI(1,1):intenROI(2,1),frame);
         
-%         intenVol = maskIm( intenROI, intenVol,file,frame,px_x,px_y,nop_f,fmt,ct, acqPath );
+        intenVol(:,:,file) = maskIm( intenVol,file, path_dest,fmt);
         
         %fd = fopen([path_dest  num2str(file-1) '.ct'], 'w+');
         %fwrite(fd, ct(:,:,frame), fmt);

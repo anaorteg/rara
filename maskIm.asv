@@ -13,15 +13,15 @@ function [ intenVol_masked ] = maskIm(intenVol,file, path_dest,fmt)
     real = back-1;
     back = pks(back);
     real = pks(real);
-    thresh = (bins(find(hist==real,1,'last')) + bins(find(hist==real,1,'last')))/2;
+    thresh = (bins(find(hist==real,1,'last')) + bins(find(hist==real,1,'last')))/1.75;
     
     %create the mask and then mask the image
     mask = uint16(dip_threshold(intenVol(:,:,file),thresh,0,1,0));
     intenVol_masked = double(mask).* intenVol(:,:,file);
     
-%      fd = fopen([path_dest  num2str(file-1) '.ct'], 'w+');
-%      fwrite(fd, intenVol_masked, fmt);
-%      fclose(fd);
+     fd = fopen([path_dest  num2str(file-1) '.ct'], 'w+');
+     fwrite(fd, intenVol(:,:,file), fmt);
+     fclose(fd);
     
     
     
