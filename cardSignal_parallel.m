@@ -1,4 +1,4 @@
-function [ data_table, path_dest, avg ] = cardSignal(acqPath,width,height,nos,nop_s,fmt, d_table, savePath)
+function [ data_table, path_dest, avg ] = cardSignal_parallel(acqPath,width,height,nos,nop_s,fmt, d_table, savePath)
 % Respiratory signal extracted from the intensities variations from
 % a Region of Interest
 % A preproccesing of the projections is performed to match the mean
@@ -21,7 +21,7 @@ nop_f = 1; % number of proyections per file
 % Variables
 all_intensities = zeros(nos,n_angles_step);
 %error=0;
-ct=zeros([px_x,px_y,n_angles_step]);
+ctf=zeros([px_x,px_y]);
 data_table = zeros([3,nof]);
 data_table(1,:) = 0:nof-1;
 
@@ -61,28 +61,20 @@ id_v = data_table(1,:);
     meanstwo = zeros(1,nof);
     %profile on;
 
- %% Process
+%% Process
+ %Parallel pool
+ %parpool;
     %disp('Signal loop: ');
-    for file= 1:nof %%loop with the indexes of data_table "resting_state"
-        if d_table(3, file) == 1
-        fprintf('Processing file %i of %i\n',file,nof)
-        % Indexes of acquisition  & calib file update
-        step = fix(file/n_angles_step)+1;
-        frame= mod(file,n_angles_step);
-        if(frame==0)
-            frame = n_angles_step;
-            step = step -1;
-        end %if first frame of step
+    parfor file=1:nof
+        fprintf('Processing file %i of %i\n',file,nof)              
         %% Opening a projection and getting the ROI
-     
         fname = [acqPath num2str(file-1) '.ct'];
-        [ct(:,:,frame),refT] =readSimpleBin(fname,px_x,px_y,nop_f,fmt);
+        [ctf,refT] =readSimpleBin(fname,px_x,px_y,nop_f,fmt);
+        
          % Mean match every file
-        ct(:,:,frame)= mean_match(ct(:,:,frame),  65535/2);
-        intenVol(:,:,file)=ct(intenROI(1,2):intenROI(4,2),intenROI(1,1):intenROI(2,1),frame);
-        
+        ctf= mean_match(ctf,  65535/2);
+        intenVol=ctf(intenROI(1,2):intenROI(4,2),intenROI(1,1):intenROI(2,1));
         intenVols = maskIm( intenVol,file, path_dest,fmt);
-        
         %fd = fopen([path_dest  num2str(file-1) '.ct'], 'w+');
         %fwrite(fd, ct(:,:,frame), fmt);
         %fclose(fd);
@@ -90,9 +82,7 @@ id_v = data_table(1,:);
         %take a mean of the images
         means(file) = mean(mean(intenVols));
         
-        end
-     
-    end%for NOF   
+    end%parfor NOF   
 
     
      % Find an array of mean intensities

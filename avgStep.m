@@ -39,14 +39,18 @@ respBlock= zeros(width, height);
      fclose(fd);
      count = count+1;
     %find angle    
-    angles(i) = data_table(2,i*8)*0.7; %angular positions in degrees instead of steps
+    angles(i) = data_table(2,i*8)*0.70039 -0.70039; %angular positions in degrees instead of steps
     end
     
 end % for averaging and angles
 
 % Generate the calibration file 
-angles(angles==0) = []; 
-calibFileGenerator(path_dest, angles, binning);
+angle_aux = angles(2:end);
+angle = angles(1);
+angle_aux(angle_aux==0) = [];
+angle = cat(2,angle, angle_aux);
+
+calibFileGenerator(path_dest, angle, binning);
 
 end %function
 

@@ -61,7 +61,7 @@ id_v = data_table(1,:);
     %meanstwo = zeros(1,nof);
     %profile on;
 
- %% Process
+ %%  Process
     %disp('Signal loop: ');
     for file=1:nof
         fprintf('Processing file %i of %i\n',file,nof)
@@ -81,14 +81,14 @@ id_v = data_table(1,:);
         ct(:,:,frame)= mean_match(ct(:,:,frame),  65535/2);
         intenVol(:,:,file)=ct(intenROI(1,2):intenROI(4,2),intenROI(1,1):intenROI(2,1),frame);
         
-        intenVol(:,:,file) = maskIm( intenVol,file, path_dest,fmt);
-        
+        %intenVols = maskIm( intenVol,file, path_dest,fmt);
+        intenVols = intenVol(:,:,file);
         %fd = fopen([path_dest  num2str(file-1) '.ct'], 'w+');
         %fwrite(fd, ct(:,:,frame), fmt);
         %fclose(fd);
         
         %take a mean of the images
-        means(file) = mean(mean(intenVol(:,:,file)));
+        means(file) = mean(mean(intenVols));
         
     end%for NOF   
 
@@ -108,32 +108,38 @@ id_v = data_table(1,:);
     count = 0;
     %find number of frames per breath
     for n = 1:nof
-            if means(n) > 170
-                %for normal peaks
-                if n>1 && n < nof
+            if n>1 && n < nof 
+                if means(n) > 170 + means(n-1)
                     if means(n+1)< means(n)&& means(n) > means(n-1) && means(n+1) > -50
                        breath(n)= count;
                        count = 0;
                         data_table(3,n) = 2;
                     end
                 end
+             
+            
+            %for peak at n = 1
+            elseif n==1 && means(n+1)< means(n) && means(n+1) > 0
+               breath(n) = 0;
+                data_table(3,n) = 2;
+            
+
+            %for peak at n=nof
+            elseif n==nof && means(n) > means(n-1)
+               breath(n) = count;
+                data_table(3,n) = 2;
+            end
+            
+            %save files that dont have breathing
+            if n>1 && n<nof && means(n) < 200
+                    if abs(means(n)-means(n-1))<100 && means(n) - means(n+1)>-100
+                        data_table(3,n) = 1 ;
+                        copyfile ([acqPath num2str(n-1) '.ct'],path_dest);
+                        fprintf('Saving heartbeat file %i\n',n)
+                    end
                 
-                %for peak at n = 1
-                if n==1 && means(n+1)< means(n) && means(n+1) > 0
-                   breath(n) = 0;
-                    data_table(3,n) = 2;
-                end
-                
-                %for peak at n=nof
-                if n==nof && means(n) > means(n-1)
-                   breath(n) = count;
-                    data_table(3,n) = 2;
-                end
-               
-            elseif abs(means(n)) < 80
-               data_table(3,n) = 1 ;
-               copyfile ([acqPath num2str(n-1) '.ct'],path_dest);
-               fprintf('Saving heartbeat file %i\n',n)
+            else
+               data_table(3,n) = 0 ; 
             end
         
         count = count +1;
