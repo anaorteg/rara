@@ -13,7 +13,7 @@ addpath(genpath(path));
 
 %% *********************** ACQ Parameters *********************************
 % Data paths and files
-acqPath = 'C:\Users\Student\Documents\NM\Data\963\20170609T113415\'; %KEEP THE "\"
+acqPath = 'C:\Users\Student\Documents\NM\Data\955\20170609T093055\'; %KEEP THE "\"
 binning= 4; %Binning of acquisition
 nos = 514; %number of steps
 n_angles_step = 8; %number of projections per step
@@ -32,31 +32,31 @@ height = 1944/binning; % 486
 procPath = [acqPath 'preproc\'];
 
 %get p1
-[data_table, path_dest, brate] = respSignal(procPath,width,height,nos,n_angles_step,fmt);
+% [data_table, path_dest, brate] = respSignal(procPath,width,height,nos,n_angles_step,fmt);
+% 
+% %get c1
+% [data_table, path_dest, hrate] = cardSignal(path_dest,width,height,nos,n_angles_step,fmt,data_table, procPath);
 
-%get c1
-[data_table, path_dest, hrate] = cardSignal(path_dest,width,height,nos,n_angles_step,fmt,data_table, procPath);
-
-%get the calibration file
-avgStep(data_table, binning, nos, n_angles_step, width, height, procPath, path_dest, fmt);
+[ resp_data_table, card_data_table, brate, hrate, card_path_dest ] = respCardSignal( procPath,width,height,nos,n_angles_step,fmt );
 
 
 %% To make Nikhil's life easier/make all three calibration folders
 %get Calib_c1
+avgStep(card_data_table, binning, nos, n_angles_step, width, height, procPath, card_path_dest, fmt);
 folder = cd(procPath);
 movefile('Calib', 'Calib_c1');
 cd(folder);
 
 %get Calib_p1
 path_dest = [procPath 'p1\subvolume00\'];
-load([procPath 'p1\data_table.mat'], 'data_table');
-avgStep(data_table, binning, nos, n_angles_step, width, height, procPath, path_dest, fmt);
+avgStep(resp_data_table, binning, nos, n_angles_step, width, height, procPath, path_dest, fmt);
 cd(procPath); %CHANGE THIS
 movefile('Calib', 'Calib_p1');
 cd(folder);
 
 %get Calib_unedited
-path_dest=procPath; 
+path_dest=procPath;
+data_table = resp_data_table;
 data_table(3,:) = 1; 
 avgStep(data_table, binning, nos, n_angles_step, width, height, procPath, path_dest, fmt);
 cd(procPath); %CHANGE THIS

@@ -2,6 +2,8 @@ function [ output_args ] = avgStep( data_table , binning, nos, nop, width, heigh
 % Projection average per angular step.
 %   Store one image per angular position as the result of averaging the
 %   projections belonging to the same step.
+% Author: NMurty AOrtega (UC3M)
+
 nof = nos*nop; %total number of files
 angles = zeros(1,(nof/8));
 

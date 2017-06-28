@@ -1,6 +1,6 @@
 function [ res ] = calibFileGenerator(outputPath, angles, binning)
    
- masterCalibrationPath='detailedCalibration_high_b1_JUN16.txt';
+ masterCalibrationPath='detailedCalibration_tuned_b1.txt';
     nProy=720;
 
 % updateLog(['[calibFileGenerator] Master calibration file: ' masterCalibrationPath]);
