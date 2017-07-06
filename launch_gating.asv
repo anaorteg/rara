@@ -13,7 +13,7 @@ addpath(genpath(path));
 
 %% *********************** ACQ Parameters *********************************
 % Data paths and files
-acqPath = 'C:\Users\Student\Documents\NM\Data\955\20170609T093055\'; %KEEP THE "\"
+acqPath = 'C:\Users\Student\Documents\NM\Data\956\20170609T094334\'; %KEEP THE "\"
 binning= 4; %Binning of acquisition
 nos = 514; %number of steps
 n_angles_step = 8; %number of projections per step
