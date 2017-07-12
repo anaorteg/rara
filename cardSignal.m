@@ -28,11 +28,11 @@ id_v = data_table(1,:);
    while (z <= nof)
        num = z;
        n = z;
-    while resp_data_table(3, n) == 1
-            if means(n) > 2 && means(n) < 60
+    while resp_data_table(3, n) == 1 && n<= nof
+            if means(n) > 2 && means(n) < 60 
                 %for normal peaks
                 if n>1 && n < nof
-                    if means(n+1)< means(n)&& means(n) > means(n-1) && means(n+1) > -60 %finds peaks for the first 2 parts, and makessure the next number is not too low of a dip
+                    if means(n+1)< means(n)&& means(n) > means(n-1) && means(n+1) > -60 %finds peaks for the first 2 parts, and makes sure the next number is not too low of a dip
                        beat(n)= count;
                        count = 0;
                        count = count + 1;

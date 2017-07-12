@@ -25,9 +25,38 @@ hline.Color = 'r';
     avg = zeros(1,nof);
     %find number of frames per breath
     for n = 1:nof
+
+ %save files that dont have breathing
+            if n>1 && n<nof && means(n) < 150 %threshold is set at any means less than 150
+                if abs(means(n)-means(n-1))<50 && means(n) - means(n+1)>-50 %means cannot be 50 or more units greater or less than the next mean or the mean before
+                    data_table(3,n) = 1 ;
+                    copyfile ([acqPath num2str(n-1) '.ct'],path_dest);
+                    fprintf('Saving heartbeat file %i\n',n)
+                end %for middle files
+            
+            %save the first file if it is not a breathing peak
+            elseif n==1 && means(n) < 150 %threshold is set at any means less than 150 
+                if means(n) - means(n+1)>-50 %means has to be within 50 units away from the next one
+                    data_table(3,n) = 1 ;
+                    copyfile ([acqPath num2str(n-1) '.ct'],path_dest);
+                    fprintf('Saving heartbeat file %i\n',n)                    
+                end %for first file
+                
+            %save the last file if it is not a breathing peak    
+            elseif n==nof && means(n) < 150 %threshold is set at any means less than 150
+                if abs(means(n)-means(n-1))<50 %means has to be within 50 units away from the one before it
+                    data_table(3,n) = 1 ;
+                    copyfile ([acqPath num2str(n-1) '.ct'],path_dest);
+                    fprintf('Saving heartbeat file %i\n',n)                    
+                end %if statement for last file
+                
+            else
+                data_table(3,n) = 0;
+            end %if statement for saving files       
+        
             if n>1 && n < nof 
-                if means(n) > 100 + means(n-1)
-                    if means(n+1)< means(n)&& means(n) > means(n-1) && means(n+1) > -50
+                if means(n) > 100 + means(n-1) %peak has to be greater than 100
+                    if means(n+1)< means(n)&& means(n) > means(n-1) && means(n+1) > -50 %if is a peak that is 100 units greater than before and the next point is above -50
                        breath(n)= count;
                        count = 0;
                        count = count +1;
@@ -37,18 +66,18 @@ hline.Color = 'r';
                            var(n)= fix(var(n)/8);
                            breath(n) = (breath(n)*0.05) + var(n);
                            avg(n) = breath(n);
-                       else
+                       else %for n <= 7
                            var(n)= fix(var(n)/8);
                            breath(n) = (breath(n)*0.05) + var(n);
                            avg(n) = breath(n);                           
-                       end
+                       end %breathing rate
 
-                    end
-                end
+                    end %counted peaks
+                end %middle peaks
              
             
             %for peak at n = 1
-            elseif n==1 && means(n+1)< means(n) && means(n+1) > 0
+            elseif n==1 && means(n+1)< means(n) && means(n+1) > -50 % so if means is greater than the one after it
                breath(n) = 0;
                data_table(3,n) = 2;
             
@@ -57,25 +86,15 @@ hline.Color = 'r';
             elseif n==nof && means(n) > means(n-1)
                breath(n) = count;
                data_table(3,n) = 2;
-               if n>7 % get average breathing rate
+               if n>7 % get average breathing rate with the angle change
                    var(n) = breath(n) - mod(n,8); %used to find the number of times the angle has changed
                    var(n)= fix(var(n)/8);
                    breath(n) = (breath(n)*0.05) + var(n);
                    avg(n) = breath(n);
-               end                
-            end
+               end %breathing rate                
+            end %if statement for peaks
             
-            %save files that dont have breathing
-            if n>1 && n<nof && means(n) < 150
-                    if abs(means(n)-means(n-1))<50 && means(n) - means(n+1)>-50
-                        data_table(3,n) = 1 ;
-                        copyfile ([acqPath num2str(n-1) '.ct'],path_dest);
-                        fprintf('Saving heartbeat file %i\n',n)
-                    end
-                
-            else
-               data_table(3,n) = 0 ; 
-            end
+           
         
         count = count +1;
     end %for frames of breath
