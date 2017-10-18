@@ -161,6 +161,7 @@ for index = 1 : length(nanLinearIndexes)
     F(x,y,z) = goodValue;
 end
 
+F = F*44000; %44000 stands for the air value in flatfield corrected images by old versions of mars sw
 % u should be fixed now - no nans in it.
 % Double check.  Sum of nans should be zero now.
 %nanLocations = isnan(F);
