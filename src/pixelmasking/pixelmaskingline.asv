@@ -52,7 +52,7 @@ nonNanLinearIndexes = find(~nanLocations);
 [xGood, yGood, zGood] = ind2sub(size(F), nonNanLinearIndexes);
 %firstprojection=find(zGood==1)
 
-nanLinearIndexes=nanLinearIndexes(nanLinearIndexes<50440);
+%nanLinearIndexes=nanLinearIndexes(nanLinearIndexes<50440);
 fs = size(F);
 for index = 1 : length(nanLinearIndexes)
     thisLinearIndex = nanLinearIndexes(index);
@@ -165,6 +165,7 @@ end
 % Double check.  Sum of nans should be zero now.
 %nanLocations = isnan(F);
 %numberOfNans = sum(nanLocations(:));
-figure; imshow(F(:,:,1));title('after point pixel removal')
+save('D:\1.2.3.2.11.3853\F.mat',F);
+%figure; imshow(F(:,:,1));title('after point pixel removal')
 profile off
 profile viewer

@@ -1,7 +1,7 @@
 profile on
 srcfiles = dir('D:\1.2.3.2.11.3853\1.2.3.1.11.3853.1\*.dcm');
-for j = 1 : 5
-    %for j = 1 : length(srcfiles)
+%for j = 1 : 5
+    for j = 1 : length(srcfiles)
     filename = strcat('D:\1.2.3.2.11.3853\1.2.3.1.11.3853.1\',srcfiles(j).name);
     J = dicomread(filename);
     if j==1
@@ -165,7 +165,7 @@ end
 % Double check.  Sum of nans should be zero now.
 %nanLocations = isnan(F);
 %numberOfNans = sum(nanLocations(:));
-save('D:\1.2.3.2.11.3853\F.mat','F');
+save D:\1.2.3.2.11.3853\F.mat F %save pathandname variable to store
 %figure; imshow(F(:,:,1));title('after point pixel removal')
 profile off
 profile viewer
