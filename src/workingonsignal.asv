@@ -1,7 +1,7 @@
 %% BEFORE RUNNING SELECT THE NAMES AND PATHS
 raw_path='C:\Users\Aortega\Documents\17_10_MARS\gating\New_preprocessed\'; %ended by \
 mod_num = 1; %26/10 Bottom peaks 
-beamdata_path = '';
+beamdata_path = 
 dst_path = 'D:\ppbottom_peaks\';
 %%
 
