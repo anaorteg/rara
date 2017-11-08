@@ -9,10 +9,10 @@ function [newrawSeries_path] = newSeries(mod_num,beamdata_path,dst_path)
 
 %% creating the empty folders
 % dst_path is our parent folder
-homename = strcat(mod_num,'000');
-rawname = strcat(mod_num,'001');
-beamname = strcat(mod_num,'002');
-reconname = strcat(mod_num,'003');
+homename = strcat(int2str(mod_num),'000');
+rawname = strcat(int2str(mod_num),'001');
+beamname = strcat(int2str(mod_num),'002');
+reconname = strcat(int2str(mod_num),'003');
 mkdir(dst_path,homename); %home folder for our series
 home_path = strcat(dst_path,homename,'/');
 mkdir(home_path,rawname); %raw data folder for our series

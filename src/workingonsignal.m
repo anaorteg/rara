@@ -2,14 +2,14 @@
 raw_path='C:\Users\Aortega\Documents\17_10_MARS\gating\New_preprocessed\'; %ended by \
 mod_num = 1; %26/10 Bottom peaks 
 beamdata_path = '';
-dst_path = 'D:\ppbottom_peaks\';
+dst_path = 'C:\Users\Aortega\Documents\17_10_MARS\gating\tries\from_new_preproc\';
 %%
 
 
 %Extracting the bottom peaks in the first and second camera position and
 %saving them in bottom_peaks folder
 
-load F.mat F;
+load C:\Users\Aortega\Documents\17_10_MARS\gating\tries\from_new_preproc\F.mat F;
 f_s=size(F);
 F = F(126:254,:,:) ;
 Zaxisprofile = zeros(1,f_s(3));
