@@ -1,51 +1,63 @@
 profile on
-srcfiles = dir('D:\1.2.3.2.11.3853\1.2.3.1.11.3853.1\*.dcm');
-%for j = 1 : 5
-    for j = 1 : length(srcfiles)
-    filename = strcat('D:\1.2.3.2.11.3853\1.2.3.1.11.3853.1\',srcfiles(j).name);
-    J = dicomread(filename);
+srcfiles = dir('D:\18Sep2017_Live Mouse2\1.2.3.2.11.3853\1.2.3.1.11.3853.1\*.dcm');
+numNames = length(srcfiles);
+format long;
+if (numNames <= 2)
+	error('dcmDir does not contain any files');
+end
+for k=1:numNames;    
+    ResortedDataNew{k}=srcfiles(k).name;    
+end
+[ResortedData,index] = sort_nat(ResortedDataNew); 
+    for j = 1 :numNames;
+        filename=(("D:\18Sep2017_Live Mouse2\1.2.3.2.11.3853\1.2.3.1.11.3853.1\"+char(ResortedData(j))));
+        %filename = strcat('D:\18Sep2017_Live Mouse2\1.2.3.2.11.3853\1.2.3.1.11.3853.1\',srcfiles(j).name);
+    J = dicomread(char(filename));
     if j==1
         js = size(J);
         jstack=zeros(js(1),js(2),length(srcfiles));
     end
     jstack(:,:,j) = J(:,:,1,1);
-    %figure; imshow(jstack(:,:,2220))
-    
-    
-end
+     
+   
+    end
 
-% srcfiles = dir('D:\1.2.3.2.11.3853\1.2.3.1.11.3853.2\*.dcm');
-% for i = 1 : length(srcfiles)
-%     filename = strcat('D:\1.2.3.2.11.3853\1.2.3.1.11.3853.2\',srcfiles(i).name);
-%     I = dicomread(filename);
-%     if i==1
-%         Is = size(I);
-%         Istack=zeros(Is(1),Is(2),length(srcfiles));
-%     end
-%     Istack(:,:,i) = I(:,:,1,1);
-%     %figure, imshow(I);
-% end
-% meistack= mean(Istack,3);
-% meistack_s = meistack;
-% save('D:\1.2.3.2.11.3853\1.2.3.1.11.3853.2\avg_ff.mat','meistack_s');
-aux = load('D:\1.2.3.2.11.3853\1.2.3.1.11.3853.2\avg_ff.mat');
-meistack = getfield(aux,'meistack_s');
-%meistack = meistack_s.meistacks_s;
+%% Open every beam dicom and average them into a single one
+srcfiles = dir('D:\18Sep2017_Live Mouse2\1.2.3.2.11.3853\1.2.3.1.11.3853.2\*.dcm');
+for i = 1 : length(srcfiles)
+    filename = strcat('D:\18Sep2017_Live Mouse2\1.2.3.2.11.3853\1.2.3.1.11.3853.2\',srcfiles(i).name);
+    I = dicomread(filename);
+    if i==1
+        Is = size(I);
+        Istack=zeros(Is(1),Is(2),length(srcfiles));
+    end
+    Istack(:,:,i) = I(:,:,1,1);
+  
+end
+meistack= mean(Istack,3);
+% Save meistack for next runs.
+meistack_s = meistack;
+save('D:\18Sep2017_Live Mouse2\1.2.3.2.11.3853\1.2.3.1.11.3853.2\avg_ff.mat','meistack_s');
+% Upload meistack from a previous run. 
+%aux = load('D:\18Sep2017_Live Mouse2\1.2.3.2.11.3853\1.2.3.1.11.3853.2\avg_ff.mat');
+%meistack = getfield(aux,'meistack_s');
+
 
 Filteredim = jstack./meistack;
-figure; imshow(Filteredim(:,:,4));title('rawdata/averageflatfield');
+% Filteredim = jstack; %19/10 using the corrected dicoms from old MARS sw
 Filteredim(1,:,:)=[];
-Filteredim(126:131,:,:)=[];
-Filteredim(254:258,:,:)=[];
-Filteredim(382:end,:,:)=[];
+Filteredim(93,:,:)=[];
+Filteredim(125:125+5,:,:)=[];
+Filteredim(251:251+7,:,:)=[];
+Filteredim(376:end,:,:)=[];
+%Filteredim(377:end,:,:)=[];
 %figure; imshow(Filteredim(:,:,1000));title('rowmasking')
 Filteredim(:,1,:)=[];
-Filteredim(:,1,:)=[];
 Filteredim(:,124:end,:)=[];
-figure; imshow(Filteredim(:,:,4));title('pixelmasking');
+figure;colormap gray;imagesc(Filteredim(:,:,1243+579));;title('rawdata/averageflatfield');
 % Now find the nan's
 F=Filteredim;
-nanLocations = isnan(F);
+ nanLocations= isnan(F);
 nanLinearIndexes = find(nanLocations);
 nonNanLinearIndexes = find(~nanLocations);
 % Get the x,y,z of all other locations that are non nan.
@@ -62,7 +74,7 @@ for index = 1 : length(nanLinearIndexes)
     %neiindexX=find(zGood==z&xGood>x-4&xGood<x+4&yGood>y-4&yGood<y+4);
     %neiindexY=find(zGood==z&yGood>y-4&yGood<y+4&xGood>x-4&xGood<x+4);
     % Get distances of this location to all the other locations
-    index
+    %index
     
     
     %inside of the dicom
@@ -161,12 +173,12 @@ for index = 1 : length(nanLinearIndexes)
     F(x,y,z) = goodValue;
 end
 
-F = F*44000; %44000 stands for the air value in flatfield corrected images by old versions of mars sw
+%F = F*44000; %44000 stands for the air value in flatfield corrected images by old versions of mars sw
 % u should be fixed now - no nans in it.
 % Double check.  Sum of nans should be zero now.
 %nanLocations = isnan(F);
 %numberOfNans = sum(nanLocations(:));
-save D:\1.2.3.2.11.3853\F.mat F %save pathandname variable to store
-%figure; imshow(F(:,:,1));title('after point pixel removal')
-profile off
+save C:\marsgithub\rara\src\F.mat F %save pathandname variable to store
+figure;colormap gray;imagesc(F(:,:,1243+596));title('projection 596 in second camera position');
+%profile off
 profile viewer

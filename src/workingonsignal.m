@@ -1,8 +1,13 @@
 %% BEFORE RUNNING SELECT THE NAMES AND PATHS
-raw_path='C:\Users\Aortega\Documents\17_10_MARS\gating\New_preprocessed\'; %ended by \
+raw_path='C:\memoey\RECONSTRUCTIONNN\New_preprocessed\'; %ended by \
 mod_num = 1; %26/10 Bottom peaks 
+<<<<<<< HEAD
+beamdata_path = 'D:\1.2.3.2.11.3853\1.2.3.1.11.3853.2';
+dst_path = 'D:\ppbottom_peaks\';
+=======
 beamdata_path = '';
 dst_path = 'C:\Users\Aortega\Documents\17_10_MARS\gating\tries\from_new_preproc\';
+>>>>>>> 41d2374c488fbce790448f22a344fcf70dddc747
 %%
 
 
@@ -71,12 +76,13 @@ end
   
 figure
 hold on 
-plot(resp_sig)
+figure ;plot (resp_sig);title('respoiartory signal in the first camera position');xlabel('projection number (1:1243)');ylabel('difference in amplitude in mean intensity'); grid on
+hold on
 plot(locs1,resp_sig(locs1),'rv','MarkerFaceColor','r')
 plot(blocs1,resp_sig(blocs1),'rs','MarkerFaceColor','b')
 grid on
 xlabel('Projection number')
-ylabel('Mean intensity)')
+ylabel('difference in amplitude in mean intensity)')
 title('Peaks and bottoms of respiratory signal in the first camera position')
 % profile off
 % profile viewer
@@ -135,7 +141,7 @@ end
   end     
 figure
 hold on 
-plot(resp_sig)
+figure ;plot (resp_sig);title('respoiartory signal in the second camera position');xlabel('projection number (1244:2486)');ylabel('difference in amplitude in mean intensity');
 plot(locs2-f_s(3)/2,resp_sig(locs2-f_s(3)/2),'rv','MarkerFaceColor','r')
 plot(blocs2-f_s(3)/2,resp_sig(blocs2-f_s(3)/2),'rs','MarkerFaceColor','b')
 grid on
