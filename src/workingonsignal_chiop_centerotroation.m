@@ -23,7 +23,7 @@ chip =  zeros(1,f_s(3));
 %outI = zeros(f_s(1),f_s(2));
 %m=65535/2;
 %F = F/44000;
-dst_path =newSeries(mod_num,beamdata_path,dst_path);
+%dst_path =newSeries(mod_num,beamdata_path,dst_path);
 
 
 for j= 1:1243 %1st camera position

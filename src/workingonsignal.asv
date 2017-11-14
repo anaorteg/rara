@@ -13,12 +13,14 @@ dst_path = 'C:\UOC\ana worktogetermatlab\rara_10-11\src\correct f\';
 load F.mat ;
 f_s=size(F);
 
-F1 = F(1:126,:,:) ;%first chip 
-F2 = F(127:254,:,:) ;%second chip
-F3 = F(255:382,:,:) ;%third chip 
-for F= F1:F3
-    
 
+for ch =1:3
+if ch==1   
+F1 = F(1:126,:,:) ;%first chip 
+elseif ch==2
+F2 = F(127:254,:,:) ;%second chip
+else
+F3 = F(255:382,:,:) ;%third chip 
 Zaxisprofile = zeros(1,f_s(3));
 %outI = zeros(f_s(1),f_s(2));
 %m=65535/2;
