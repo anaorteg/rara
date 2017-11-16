@@ -105,3 +105,4 @@ for  projection= 1:f_s(3)
 end
 figure;plot(resp_sig3c); title(['respiratory signal combining chips ']);xlabel('Projection number');
 ylabel('Pixel value difference due to respiratory motion)');
+save resp_sig3c.mat resp_sig3c;
