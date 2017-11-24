@@ -30,5 +30,14 @@ for p =1:size(blocs) %seperating peaky slides
     %dicomwrite(EE,filename_dst);
     copyfile(filename_src, filename_dst);
     % folder
+  
 end
-
+figure
+hold on 
+plot(inresp_sig3c)
+%plot(locs,resp_sig(locs),'rv','MarkerFaceColor','r')
+plot(blocs,inresp_sig3c(blocs),'rs','MarkerFaceColor','b')
+grid on
+xlabel('Projection number');
+ylabel('Mean intensity)');
+title('Peaks and bottoms of respiratory signal in the whole stack')
