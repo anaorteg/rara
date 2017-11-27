@@ -6,11 +6,12 @@ h = animatedline;
 x=580:600;
 y = resp_sig3c(x,1);
 mov = implay(F(:,:,x),1);
-a = tic; % start timer
+a = tic % start timer
 b =0;
 for k = 1:length(x)
-    addpoints(h,k,y(k));
+    addpoints(h,x(k),y(k))
     while b<1
+        b
         b = toc(a); % check timer
     end
         drawnow  % update screen every 1/30 seconds
