@@ -1,7 +1,9 @@
 clear
 close all
 
-load resp_sig3c.mat;
+%load resp_sig3c.mat;
+load resp_sig_midc.mat
+resp_sig3c = resp_sig(:,2);
 expiration_projection_loc= sortPhaseRespSignal(resp_sig3c');
 
 
@@ -28,16 +30,16 @@ for p =1:s(2) %seperating expiration phase projections
     j = expiration_projection_loc(p);
     switch j
         case 1
-            filename_dst =char("C:\Users\Aortega\Documents\17_10_MARS\gating\New_preprocessed_gated\1\"+char(ResortedData(p)));
+            filename_dst =char("C:\Users\Aortega\Documents\17_10_MARS\gating\New_preprocessed_gated_midchip\1\"+char(ResortedData(p)));
         case 2
-            filename_dst =char("C:\Users\Aortega\Documents\17_10_MARS\gating\New_preprocessed_gated\2\"+char(ResortedData(p)));
+            filename_dst =char("C:\Users\Aortega\Documents\17_10_MARS\gating\New_preprocessed_gated_midchip\2\"+char(ResortedData(p)));
             % folder
         case 3
-            filename_dst =char("C:\Users\Aortega\Documents\17_10_MARS\gating\New_preprocessed_gated\3\"+char(ResortedData(p)));
+            filename_dst =char("C:\Users\Aortega\Documents\17_10_MARS\gating\New_preprocessed_gated_midchip\3\"+char(ResortedData(p)));
         case 4
-            filename_dst =char("C:\Users\Aortega\Documents\17_10_MARS\gating\New_preprocessed_gated\4\"+char(ResortedData(p)));
+            filename_dst =char("C:\Users\Aortega\Documents\17_10_MARS\gating\New_preprocessed_gated_midchip\4\"+char(ResortedData(p)));
         otherwise
-            filename_dst =char("C:\Users\Aortega\Documents\17_10_MARS\gating\New_preprocessed_gated\5\"+char(ResortedData(p)));
+            filename_dst =char("C:\Users\Aortega\Documents\17_10_MARS\gating\New_preprocessed_gated_midchip\5\"+char(ResortedData(p)));
     end
     if max_dis_proj(j) < dis_proj(j)
         max_dis_proj(j) = dis_proj(j);
@@ -51,22 +53,22 @@ end
 for fdr = 1:4
     switch fdr
         case 1
-            srcfiles = dir('C:\Users\Aortega\Documents\17_10_MARS\gating\New_preprocessed_gated\1\*.dcm');
+            srcfiles = dir('C:\Users\Aortega\Documents\17_10_MARS\gating\New_preprocessed_gated_midchip\1\*.dcm');
             num_fr = length(srcfiles);
-            fileID = fopen('C:\Users\Aortega\Documents\17_10_MARS\gating\New_preprocessed_gated\1\statistics.txt','w');
+            fileID = fopen('C:\Users\Aortega\Documents\17_10_MARS\gating\New_preprocessed_gated_midchip\1\statistics.txt','w');
         case 2
-            srcfiles = dir('C:\Users\Aortega\Documents\17_10_MARS\gating\New_preprocessed_gated\2\*.dcm');
+            srcfiles = dir('C:\Users\Aortega\Documents\17_10_MARS\gating\New_preprocessed_gated_midchip\2\*.dcm');
             num_fr = length(srcfiles);
-            fileID = fopen('C:\Users\Aortega\Documents\17_10_MARS\gating\New_preprocessed_gated\2\statistics.txt','w');
+            fileID = fopen('C:\Users\Aortega\Documents\17_10_MARS\gating\New_preprocessed_gated_midchip\2\statistics.txt','w');
             % folder
         case 3
-            srcfiles = dir('C:\Users\Aortega\Documents\17_10_MARS\gating\New_preprocessed_gated\3\*.dcm');
+            srcfiles = dir('C:\Users\Aortega\Documents\17_10_MARS\gating\New_preprocessed_gated_midchip\3\*.dcm');
             num_fr = length(srcfiles);
-            fileID = fopen('C:\Users\Aortega\Documents\17_10_MARS\gating\New_preprocessed_gated\3\statistics.txt','w');
+            fileID = fopen('C:\Users\Aortega\Documents\17_10_MARS\gating\New_preprocessed_gated_midchip\3\statistics.txt','w');
         case 4
-            srcfiles = dir('C:\Users\Aortega\Documents\17_10_MARS\gating\New_preprocessed_gated\4\*.dcm');
+            srcfiles = dir('C:\Users\Aortega\Documents\17_10_MARS\gating\New_preprocessed_gated_midchip\4\*.dcm');
             num_fr = length(srcfiles)/numNames;
-            fileID = fopen('C:\Users\Aortega\Documents\17_10_MARS\gating\New_preprocessed_gated\4\statistics.txt','w');
+            fileID = fopen('C:\Users\Aortega\Documents\17_10_MARS\gating\New_preprocessed_gated_midchip\4\statistics.txt','w');
     end
     %Statistics:
     % Max angular distance between projections
