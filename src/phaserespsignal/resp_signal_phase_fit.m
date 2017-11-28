@@ -6,36 +6,37 @@ function [resp_phase, resp_amp] = resp_signal_phase_fit(resp_sig)
 % Aicko Y. Schumann et al 2010
 
 %CT-respiration recording, x(t)
-s = resp_sig';
+s = resp_sig';%- smooth(resp_sig',20);%rolling mean 22 stands for angular change of 10º%-mean(resp_sig);
 
 % prerequisites: filtering and oscillating around 0
-Fs = 10;                                                % Sampling Frequency (Hz)
+Fs = 4.54;                                                % Sampling Frequency (Hz)
 Fn = Fs/2;                                              % Nyquist Frequency (Hz)
-Wp = [0.2 3]/Fn;                                    % Passband Frequencies (Normalised)
-Ws = [0.17 3.05]/Fn;                                    % Stopband Frequencies (Normalised)
+Wp = [0.1 2.2]/Fn;                                    % Passband Frequencies (Normalised)
+Ws = [0.07 2.25]/Fn;                                    % Stopband Frequencies (Normalised)
 Rp = 10;                                                % Passband Ripple (dB)
 Rs = 50;                                                % Stopband Ripple (dB)
 [n,Ws] = cheb2ord(Wp,Ws,Rp,Rs);                         % Filter Order
 [z,p,k] = cheby2(n,Rs,Ws);                              % Filter Design
 [sosbp,gbp] = zp2sos(z,p,k);                            % Convert To Second-Order-Section For Stability
-figure(1)
-freqz(sosbp, 2^16, Fs)                                  % Filter Bode Plot
+%figure(1)
+%freqz(sosbp, 2^16, Fs)                                  % Filter Bode Plot
 tv = linspace(0, 1, length(s))/Fs;                      % Time Vector (s)
 s_filt = filtfilt(sosbp,gbp, s);                        % Filter Signal
 
 %x_t = s_filt - smooth(s_filt,'rlowess');
-x_t = s_filt - smooth(s_filt,20);%rolling mean 22 stands for angular change of 10º
-%figure;plot(smooth(s_filt,'rlowess')); title('smooth')
+x_t = s_filt; % - smooth(s_filt,20);%rolling mean 22 stands for angular change of 10º
+%figure;plot(s_filt); title('filtered')
 %x_t = x_t-mean(x_t);
 
 %counterpart approach
+x_t =s;
 x_t_complex_counterpart = hilbert(x_t);
 resp_analitic = x_t_complex_counterpart.*1i+x_t;
 resp_phase = angle(resp_analitic);
 resp_amp = abs(resp_analitic);
 figure; plot(resp_phase); title('respiratory phase signal')
-hold on;
-%plot(resp_amp);
+
+figure; plot(resp_amp); title('respiratory amplitude signal')
 
 
 
