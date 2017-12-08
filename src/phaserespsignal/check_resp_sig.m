@@ -131,6 +131,7 @@ for fdr = 1:5
     for  projection= 1:f_s(3)
         wheremymouseis = chiploc(projection);
         resp_sig3c(projection) = resp_sig(projection,wheremymouseis);
+        save resp_sig3c.mat resp_sig3c;
     end
     figure;plot(resp_sig3c); title(['respiratory signal combining chips ']);xlabel('Projection number');
     ylabel('Pixel value difference due to respiratory motion)');

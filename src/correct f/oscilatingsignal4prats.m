@@ -27,9 +27,9 @@ for chip =1:3
         CMean=mean(F(:,:,j),1);
         VMean=mean(CMean,2);
         Zaxisprofile_orig(j)=VMean;  % array saving the mean value per projection
-%          if j==171
-%              fprintf('STOP')
-%          end
+        %          if j==171
+        %              fprintf('STOP')
+        %          end
         % Find the row of the most black point  per projection
         if chip==1
             Pf = F_orig(:,:,j);
@@ -82,7 +82,7 @@ for chip =1:3
     %% Start analizing each camera position separately
     
     %dst_path =newSeries(mod_num,beamdata_path,dst_path);
-        
+    
     Zaxisprofile = Zaxisprofile_orig(1 : 1243);
     illumination_var = smooth(Zaxisprofile,'rlowess');
     illumination_var =  illumination_var';
@@ -116,6 +116,7 @@ inresp_sig3c= -resp_sig3c;%calculating invers respiratory signal for bottoms
 inresp_sig3c=inresp_sig3c+1;
 [bpks_org,blocs_org] = findpeaks(inresp_sig3c);%seperating botton peaks in the whole stack
 
+
 [bpks1,blocs1]= findpeaks(inresp_sig3c(1:880));
 M1=mean(bpks1);
 std1=std(bpks1);
@@ -128,7 +129,7 @@ for i=1:s1(1)
     if bpks1(i,1)>= ldis1 && bpks1(i,1)<= udis1 %finding peaks with having limitation with std
         Blocs1(i)=blocs1(i);
         Bpks1(i)=bpks1(i);
-       
+        
     end
 end
 Bpks1(Bpks1==0)=[];
@@ -147,7 +148,7 @@ for i=1:s2(1)
     if bpks2(i,1)>= ldis2 && bpks2(i,1)<= udis2 %finding peaks with having limitation with std
         Blocs2(i)=blocs2(i);
         Bpks2(i)=bpks2(i);
-       
+        
     end
 end
 Bpks2(Bpks2==0)=[];
@@ -169,7 +170,7 @@ for i=1:s3(1)
     if bpks3(i,1)>= ldis3 && bpks3(i,1)<= udis3 %finding peaks with having limitation with std
         Blocs3(i)=blocs3(i);
         Bpks3(i)=bpks3(i);
-       
+        
     end
 end
 Bpks3(Bpks3==0)=[];
@@ -192,15 +193,15 @@ for i=1:s4(1)
     if bpks4(i,1)>= ldis4 && bpks4(i,1)<= udis4 %finding peaks with having limitation with std
         Blocs4(i)=blocs4(i);
         Bpks4(i)=bpks4(i);
-       
+        
     end
 end
 Bpks4(Bpks4==0)=[];
 Blocs4(Blocs4==0)=[];
 
 blocs=[Blocs1;Blocs2;Blocs3;Blocs4];
-    
-    srcfiles = dir('D:\18Sep2017_Live Mouse2\1.2.3.2.11.3853\1.2.3.1.11.3853.1\*.dcm');
+
+srcfiles = dir('D:\18Sep2017_Live Mouse2\1.2.3.2.11.3853\1.2.3.1.11.3853.1\*.dcm');
 numNames = length(srcfiles);
 format long;
 if (numNames <= 2)
@@ -221,11 +222,11 @@ for p =1:size(blocs) %seperating peaky slides
     %dicomwrite(EE,filename_dst);
     copyfile(filename_src, filename_dst);
     % folder
-  
+    
 end
 
 figure
-hold on 
+hold on
 plot(inresp_sig3c)
 %plot(locs,resp_sig(locs),'rv','MarkerFaceColor','r')
 plot(blocs,inresp_sig3c(blocs),'rs','MarkerFaceColor','b')

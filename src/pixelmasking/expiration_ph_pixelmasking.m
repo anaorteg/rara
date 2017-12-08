@@ -1,18 +1,22 @@
 profile on
-srcfiles = dir('D:\18Sep2017_Live Mouse2\1.2.3.2.11.3853\1.2.3.1.11.3853.1\*.dcm');
+srcfiles = dir('C:\UOC\ana worktogetermatlab\rara_10-11\src\PHase selectipn\2\*.dcm');
 numNames = length(srcfiles);
 format long;
 if (numNames <= 2)
 	error('dcmDir does not contain any files');
 end
-for k=1:numNames;    
+for k=1:numNames    
     ResortedDataNew{k}=srcfiles(k).name;    
 end
 [ResortedData,index] = sort_nat(ResortedDataNew); 
+stack_index = zeros(1,length(srcfiles));
     for j = 1 :numNames
-        filename=(("D:\18Sep2017_Live Mouse2\1.2.3.2.11.3853\1.2.3.1.11.3853.1\"+char(ResortedData(j))));
+        filename=(("C:\UOC\ana worktogetermatlab\rara_10-11\src\PHase selectipn\2\"+char(ResortedData(j))));
         %filename = strcat('D:\18Sep2017_Live Mouse2\1.2.3.2.11.3853\1.2.3.1.11.3853.1\',srcfiles(j).name);
     J = dicomread(char(filename));
+    [token, remain]=split(ResortedData(j),'.');
+    even_index = str2double(cell2mat(token(7)));%getting the 7th value which correspond to projection location *2
+    stack_index(j) = even_index/2;%getting exact projection position
     if j==1
         js = size(J);
         jstack=zeros(js(1),js(2),length(srcfiles));
@@ -182,7 +186,9 @@ end
 % Double check.  Sum of nans should be zero now.
 %nanLocations = isnan(F);
 %numberOfNans = sum(nanLocations(:));
-save F.mat F %save pathandname variable to store
-figure;colormap gray;imagesc(F(:,:,53));tit3le('projection 596 in second camera position');
+FEX=F;
+save FEX.mat FEX %save pathandname variable to store
+save stack_index.mat stack_index
+%figure;colormap gray;imagesc(F(:,:,53));tit3le('projection 596 in second camera position');
 %profile off
-profile viewer
+%profile viewer
