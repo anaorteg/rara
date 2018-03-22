@@ -1,5 +1,5 @@
 profile on
-srcfiles = dir('D:\18Sep2017_Live Mouse2\1.2.3.2.11.3853\1.2.3.1.11.3853.1\*.dcm');
+srcfiles = dir('E:\18Sep2017_Live Mouse2\1.2.3.2.11.3853\1.2.3.1.11.3853.1\*.dcm');
 numNames = length(srcfiles);
 format long;
 if (numNames <= 2)
@@ -10,8 +10,8 @@ for k=1:numNames;
 end
 [ResortedData,index] = sort_nat(ResortedDataNew); 
     for j = 1 :numNames
-        filename=(("D:\18Sep2017_Live Mouse2\1.2.3.2.11.3853\1.2.3.1.11.3853.1\"+char(ResortedData(j))));
-        %filename = strcat('D:\18Sep2017_Live Mouse2\1.2.3.2.11.3853\1.2.3.1.11.3853.1\',srcfiles(j).name);
+        filename=(("E:\18Sep2017_Live Mouse2\1.2.3.2.11.3853\1.2.3.1.11.3853.1\"+char(ResortedData(j))));
+        %filename = strcat('E:\18Sep2017_Live Mouse2\1.2.3.2.11.3853\1.2.3.1.11.3853.1\',srcfiles(j).name);
     J = dicomread(char(filename));
     if j==1
         js = size(J);
@@ -23,9 +23,9 @@ end
     end
 
 %% Open every beam dicom and average them into a single one
-srcfiles = dir('D:\18Sep2017_Live Mouse2\1.2.3.2.11.3853\1.2.3.1.11.3853.2\*.dcm');
+srcfiles = dir('E:\18Sep2017_Live Mouse2\1.2.3.2.11.3853\1.2.3.1.11.3853.2\*.dcm');
 for i = 1 : length(srcfiles)
-    filename = strcat('D:\18Sep2017_Live Mouse2\1.2.3.2.11.3853\1.2.3.1.11.3853.2\',srcfiles(i).name);
+    filename = strcat('E:\18Sep2017_Live Mouse2\1.2.3.2.11.3853\1.2.3.1.11.3853.2\',srcfiles(i).name);
     I = dicomread(filename);
     if i==1
         Is = size(I);
@@ -37,7 +37,7 @@ end
 meistack= mean(Istack,3);
 % Save meistack for next runs.
 meistack_s = meistack;
-save('D:\18Sep2017_Live Mouse2\1.2.3.2.11.3853\1.2.3.1.11.3853.2\avg_ff.mat','meistack_s');
+save('E:\18Sep2017_Live Mouse2\1.2.3.2.11.3853\1.2.3.1.11.3853.2\avg_ff.mat','meistack_s');
 % Upload meistack from a previous run. 
 %aux = load('D:\18Sep2017_Live Mouse2\1.2.3.2.11.3853\1.2.3.1.11.3853.2\avg_ff.mat');
 %meistack = getfield(aux,'meistack_s');
@@ -171,7 +171,7 @@ for index = 1 : length(nanLinearIndexes)
     % The closest non-nan value will be located at index sortedIndexes(1)
     indexOfClosest = sortedIndexes(1);
     % Get the Ffigure; imshow(Filteredim(:,:,1000));title('pixelmasking') value there.
-    goodValue = Fwdw(xGoodwdw(indexOfClosest), yGoodwdw(indexOfClosest));
+    goodValue = Fwdw(xGoodwdw(indexOfClosest), yGooodwdw(indexOfClosest));
     % Replace the bad nan value in u with the good value.
     F(x,y,z) = goodValue;
             

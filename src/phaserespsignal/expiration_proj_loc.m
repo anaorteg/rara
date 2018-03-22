@@ -8,7 +8,7 @@ expiration_projection_loc= sortPhaseRespSignal(resp_sig3c');
 %% Move the dicom files in the projection numbers of
 % expiration_projection_location (location =1 means this frame is an expiration)
 % into a new folder to prepare it for reconstruction.
-srcfiles = dir('D:\18Sep2017_Live Mouse2\1.2.3.2.11.3853\1.2.3.1.11.3853.1\*.dcm');
+srcfiles = dir('E:\New_preprocessed\*.dcm');
 numNames = length(srcfiles);
 format long;
 if (numNames <= 2)
@@ -24,7 +24,7 @@ mean_dis_proj = zeros(1,2);
 max_dis_proj = zeros(1,2);
 for p =1:s(2) %seperating expiration phase projections
     % from the list get the filename in positions of expiration phase
-    filename_src =char("D:\18Sep2017_Live Mouse2\1.2.3.2.11.3853\1.2.3.1.11.3853.1\"+char(ResortedData(p)));
+    filename_src =char("E:\New_preprocessed\"+char(ResortedData(p)));
     j = expiration_projection_loc(p);
     switch j
         case 1
@@ -45,10 +45,10 @@ for p =1:s(2) %seperating expiration phase projections
     mean_dis_proj(j)= dis_proj(j) + mean_dis_proj(j);
     dis_proj(j)=0;
     dis_proj=dis_proj+1;
-    copyfile(filename_src, filename_dst);
+    %copyfile filename_src filename_dst ;
 end
 
-for fdr = 1:5
+for fdr = 1:2
     switch fdr
         case 1
             srcfiles = dir('C:\UOC\ana worktogetermatlab\rara_10-11\src\PHase selectipn\1\*.dcm');
@@ -59,25 +59,25 @@ for fdr = 1:5
             num_fr = length(srcfiles);
             fileID = fopen('C:\UOC\ana worktogetermatlab\rara_10-11\src\PHase selectipn\2\statistics.txt','w');
             
-%         case 3
-%             srcfiles = dir('C:\UOC\ana worktogetermatlab\rara_10-11\src\PHase selectipn\33\*.dcm');
-%             num_fr = length(srcfiles);
-%             fileID = fopen('C:\UOC\ana worktogetermatlab\rara_10-11\src\phase selection\33\statistics.txt','w');
-%         case 4
-%             srcfiles = dir('C:\UOC\ana worktogetermatlab\rara_10-11\src\PHase selectipn\44\*.dcm');
-%             num_fr = length(srcfiles)/numNames;
-%             fileID = fopen('C:\UOC\ana worktogetermatlab\rara_10-11\src\PHase selectipn\44\statistics.txt','w');
-%             case 5
-%             srcfiles = dir('C:\UOC\ana worktogetermatlab\rara_10-11\src\PHase selectipn\55\*.dcm');
-%             num_fr = length(srcfiles)/numNames;
-%             fileID = fopen('C:\UOC\ana worktogetermatlab\rara_10-11\src\PHase selectipn\55\statistics.txt','w');
+            %         case 3
+            %             srcfiles = dir('C:\UOC\ana worktogetermatlab\rara_10-11\src\PHase selectipn\33\*.dcm');
+            %             num_fr = length(srcfiles);
+            %             fileID = fopen('C:\UOC\ana worktogetermatlab\rara_10-11\src\phase selection\33\statistics.txt','w');
+            %         case 4
+            %             srcfiles = dir('C:\UOC\ana worktogetermatlab\rara_10-11\src\PHase selectipn\44\*.dcm');
+            %             num_fr = length(srcfiles)/numNames;
+            %             fileID = fopen('C:\UOC\ana worktogetermatlab\rara_10-11\src\PHase selectipn\44\statistics.txt','w');
+            %             case 5
+            %             srcfiles = dir('C:\UOC\ana worktogetermatlab\rara_10-11\src\PHase selectipn\55\*.dcm');
+            %             num_fr = length(srcfiles)/numNames;
+            %             fileID = fopen('C:\UOC\ana worktogetermatlab\rara_10-11\src\PHase selectipn\55\statistics.txt','w');
     end
     %Statistics:
     % Max angular distance between projections
     max_step = max_dis_proj(1,fdr)*0.5;
     % Mean angular distance between projections
     mean_step = mean_dis_proj(1,fdr)/num_fr*0.5;
-        % Number of projections/total number
+    % Number of projections/total number
     num_fr = num_fr/numNames;
     fprintf(fileID,'Max angular distance between projections %d degrees\n Mean angular distance between projections %d degrees\n Number of projections/total number %d \n',max_step,mean_step, num_fr);
     fclose(fileID);

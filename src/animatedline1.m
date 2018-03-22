@@ -1,7 +1,7 @@
 load F.mat;
-
+load resp_sig3c.mat;
 h = animatedline;
-x=580:600;
+x=5:100;
 y = resp_sig3c(x,1);
 mov = implay(F(:,:,x),1); % frame rate is 1 farme per second
 a = tic; % start timer
@@ -12,7 +12,7 @@ for k = 1:length(x)
         b = toc(a); % check timer
     end
         drawnow  % update screen every 1 seconds
-        a = tic; % reset timer after updating
+        a = tic; % reset timer after updatingD
         b = 0;
 end
 
