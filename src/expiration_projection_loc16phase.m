@@ -2,7 +2,7 @@ clear
 close all
 
 load resp_sig3c.mat;
-expiration_projection_loc= sortPhaseRespSignal16phase(resp_sig3c');
+expiration_projection_loc= sortPhaseRespSignalpi8phase(resp_sig3c');
 
 
 %% Move the dicom files in the projection numbers of
@@ -19,9 +19,9 @@ for k=1:numNames
 end
 [ResortedData,index] = sort_nat(ResortedDataNew);
 s=size(expiration_projection_loc);
-dis_proj= zeros(1,16);
-mean_dis_proj = zeros(1,16);
-max_dis_proj = zeros(1,16);
+dis_proj= zeros(1,8);
+mean_dis_proj = zeros(1,8);
+max_dis_proj = zeros(1,8);
 for p =1:s(2) %seperating expiration phase projections
     % from the list get the filename in positions of expiration phase
     filename_src =char("C:\UOC\ana worktogetermatlab\phase\rara_10-11\src\1.2.3.1.11.3853.1\"+char(ResortedData(p)));
